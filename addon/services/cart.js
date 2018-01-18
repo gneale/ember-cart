@@ -50,7 +50,15 @@ const Service = ArrayProxy.extend({
   },
 
   removeItem(item) {
-    this.removeObject(item);
+    let cartItem = item.toCartItem();
+    let foundCartItem = this.findBy('guid', get(cartItem, 'guid'));
+    if (foundCartItem) {
+      this.removeObject(foundCartItem);
+    }
+
+    if (get(cartItem, 'increment') || get(cartItem, 'quantity') === 0) {
+      cartItem.decrementProperty('quantity');
+    }
   },
 
   clearItems() {
